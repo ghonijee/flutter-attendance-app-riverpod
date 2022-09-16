@@ -116,8 +116,8 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   }
 
   MasterLocationModel getMasterLocation() {
-    Map<String, dynamic> masterPositionJson = jsonDecode(storage.read(LocalStorageKey.masterLocation));
-    MasterLocationModel masterLocationModel = MasterLocationModel.fromMap(masterPositionJson);
+    String masterPositionJson = storage.read(LocalStorageKey.masterLocation);
+    MasterLocationModel masterLocationModel = MasterLocationModel.fromJson(masterPositionJson);
     return masterLocationModel;
   }
 

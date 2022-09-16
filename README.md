@@ -1,16 +1,43 @@
-# attendance_app
+# ATTENDANCE APP
 
-A new Flutter project.
+## User Story
 
-## Getting Started
+1. User can setting master location for company with tapped position on map.
+2. User can check-in & check-out only one time
+2. User can check-in & check-out only on today
+3. User can check-in & check-out less than 50m from master location setting
+3. User can look history attendance
 
-This project is a starting point for a Flutter application.
+<br/>
 
-A few resources to get you started if this is your first Flutter project:
+## Screen
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<br/>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech Stack
+
+* Manage flutter version 3.3.1 using [FVM]()
+* State Management Using [Riverpod]()
+* Maps view using [Flutter_map]()
+* Union-Type and model builder using [Freezed]()
+* Local database using [Isar DB]()
+* Local storage key-value using [GetStorage]()
+* Calendar view using Table [Calendar]()
+* Device location using [Geolocator]()
+* Convert position to address using [Geocoding]()
+
+<br/>
+
+## How Run
+1. Clone project from repository
+    ```git
+    git clone .... 
+    ```
+2. Install dependencies
+    ```git
+    flutter pub get 
+    ```
+3. Running test
+    ```git
+    flutter test
+    ```
