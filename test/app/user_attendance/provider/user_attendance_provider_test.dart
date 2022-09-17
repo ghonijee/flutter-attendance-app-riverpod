@@ -31,6 +31,18 @@ Position mockPosition = Position(
     heading: 0.0,
     speed: 0.0,
     speedAccuracy: 0.0);
+Position secondMockPosition = Position(
+    latitude: 52.561270,
+    longitude: 7.639382,
+    timestamp: DateTime.fromMillisecondsSinceEpoch(
+      500,
+      isUtc: true,
+    ),
+    altitude: 3000.0,
+    accuracy: 0.0,
+    heading: 0.0,
+    speed: 0.0,
+    speedAccuracy: 0.0);
 
 @GenerateNiceMocks([MockSpec<AttendanceSourceLocal>()])
 void main() {
@@ -60,21 +72,13 @@ void main() {
     await GetStorage.init();
     localStorage = GetStorage();
     await localStorage.erase();
-    MasterLocationModel masterLocationModel = MasterLocationModel(lat: 7.8, long: 11.8, name: "test-address");
+    MasterLocationModel masterLocationModel = MasterLocationModel(lat: 52.561270, long: 5.639382, name: "test-address");
     localStorage.write(LocalStorageKey.masterLocation, masterLocationModel.toJson());
 
     locationNotifier = MockLocationNotifier();
     sourceLocal = MockAttendanceSourceLocal();
 
     GeocodingPlatform.instance = MockGeocodingPlatform();
-    // when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => mockPosition);
-    // container = ProviderContainer(overrides: [
-    //   userAttendanceProvider.overrideWithProvider(
-    //     StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
-    //       return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
-    //     }),
-    //   ),
-    // ]);
   });
 
   test("Init state is model empty when find data on DB is null", () async {
@@ -121,5 +125,119 @@ void main() {
     expect(loaded.model.checkOutAt, isA<DateTime?>());
     expect(loaded.model.checkInAt, attendanceModel.checkInAt);
     expect(loaded.model.checkOutAt, attendanceModel.checkOutAt);
+  });
+
+  test("Change date state is model empty when find data on DB is null", () async {
+    var newDate = DateTime.now();
+    when(sourceLocal.whereDate(newDate)).thenAnswer((_) async => null);
+    container = ProviderContainer(overrides: [
+      userAttendanceProvider.overrideWithProvider(
+        StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
+          return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
+        }),
+      ),
+    ]);
+
+    var state = container.read(userAttendanceProvider);
+    expect(state, UserAttendanceState.inital());
+    await Future.delayed(const Duration(seconds: 5));
+    await container.read(userAttendanceProvider.notifier).changeDate(newDate);
+    var loaded = container.read(userAttendanceProvider);
+    loaded as AttendanceLoaded;
+    expect(loaded.model.checkInLat, isNull);
+    expect(loaded.model.checkInLong, isNull);
+    expect(loaded.model.checkOutLat, isNull);
+    expect(loaded.model.checkOutLong, isNull);
+  });
+
+  test("Change date state is model get datafrom DB", () async {
+    var attendanceModel = AttendanceModel(
+      checkInAt: DateTime.now(),
+      checkOutAt: DateTime.now(),
+    );
+    when(sourceLocal.whereDate(any)).thenAnswer((_) async => attendanceModel);
+    container = ProviderContainer(overrides: [
+      userAttendanceProvider.overrideWithProvider(
+        StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
+          return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
+        }),
+      ),
+    ]);
+
+    var state = container.read(userAttendanceProvider);
+    expect(state, UserAttendanceState.inital());
+    await container.read(userAttendanceProvider.notifier).changeDate(attendanceModel.checkInAt!);
+    var loaded = container.read(userAttendanceProvider);
+    loaded as AttendanceLoaded;
+    expect(loaded.model.checkInAt, isA<DateTime?>());
+    expect(loaded.model.checkOutAt, isA<DateTime?>());
+    expect(loaded.model.checkInAt, attendanceModel.checkInAt);
+    expect(loaded.model.checkOutAt, attendanceModel.checkOutAt);
+  });
+
+  test("Check in failed when distance position from master location > 50 meters", () async {
+    when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => secondMockPosition);
+    container = ProviderContainer(overrides: [
+      userAttendanceProvider.overrideWithProvider(
+        StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
+          return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
+        }),
+      ),
+    ]);
+    var state = container.listen(userAttendanceProvider, (previous, next) => next);
+    await container.read(userAttendanceProvider.notifier).checkIn();
+    expect(state.read(), isA<AttendanceFailed>());
+    state is AttendanceFailed;
+  });
+  test("Check in success when distance position from master location < 50 meters", () async {
+    when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => mockPosition);
+    var attendanceModel = AttendanceModel(
+      checkInLat: mockPosition.latitude,
+      checkInLong: mockPosition.longitude,
+    );
+    when(sourceLocal.whereDate(any)).thenAnswer((_) async => attendanceModel);
+
+    container = ProviderContainer(overrides: [
+      userAttendanceProvider.overrideWithProvider(
+        StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
+          return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
+        }),
+      ),
+    ]);
+    var state = container.listen(userAttendanceProvider, (previous, next) => next);
+    await container.read(userAttendanceProvider.notifier).checkIn();
+    expect(state.read(), isA<AttendanceLoaded>());
+    var result = state.read() as AttendanceLoaded;
+    expect(result.model.checkInLat, mockPosition.latitude);
+  });
+  test("Check out failed when distance position from master location > 50 meters", () async {
+    when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => secondMockPosition);
+    container = ProviderContainer(overrides: [
+      userAttendanceProvider.overrideWithProvider(
+        StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
+          return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
+        }),
+      ),
+    ]);
+    var state = container.listen(userAttendanceProvider, (previous, next) => next);
+    await container.read(userAttendanceProvider.notifier).checkOut();
+    expect(state.read(), isA<AttendanceFailed>());
+    state is AttendanceFailed;
+  });
+  test("Check out success when distance position from master location < 50 meters", () async {
+    when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => mockPosition);
+
+    container = ProviderContainer(overrides: [
+      userAttendanceProvider.overrideWithProvider(
+        StateNotifierProvider.autoDispose<UserAttendanceNotifier, UserAttendanceState>((ref) {
+          return UserAttendanceNotifier(localStorage, sourceLocal, locationNotifier);
+        }),
+      ),
+    ]);
+    var state = container.listen(userAttendanceProvider, (previous, next) => next);
+    await container.read(userAttendanceProvider.notifier).checkOut();
+    expect(state.read(), isA<AttendanceLoaded>());
+    var result = state.read() as AttendanceLoaded;
+    expect(result.model.checkOutLat, mockPosition.latitude);
   });
 }
