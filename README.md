@@ -14,9 +14,9 @@
 
 Action | Image
 -------------------------------|-------------------------
-Setting Master Location, ![Setting Master GIF](https://github.com/ghonijee/flutter-attendance-app-riverpod/blob/master/gif/setting_master_location.gif)
-User check in failed, ![Failed GIF](https://github.com/ghonijee/flutter-attendance-app-riverpod/blob/master/gif/CheckIn-failed.gif)
-User check in success, ![Success GIF](https://github.com/ghonijee/flutter-attendance-app-riverpod/blob/master/gif/CheckIn-failed.gif)
+Setting Master Location | ![Setting Master GIF](https://github.com/ghonijee/flutter-attendance-app-riverpod/blob/master/gif/setting_master_location.gif)
+User check in failed | ![Failed GIF](https://github.com/ghonijee/flutter-attendance-app-riverpod/blob/master/gif/CheckIn-failed.gif)
+User check in success | ![Success GIF](https://github.com/ghonijee/flutter-attendance-app-riverpod/blob/master/gif/CheckIn-failed.gif)
 
 <br/>
 
