@@ -19,8 +19,8 @@ class AttendanceSourceLocal {
     // });
   }
 
-  whereDate(DateTime value) async {
-    var lastMidnightTomorrow = DateTime(value.year, value.month, value.day);
+  whereDate(DateTime? value) async {
+    var lastMidnightTomorrow = DateTime(value!.year, value.month, value.day);
     var lastMidnight = DateTime(value.year, value.month, value.day).add(Duration(days: 1));
 
     var item = await db.attendanceModels.filter().checkInAtGreaterThan(lastMidnightTomorrow).and().checkInAtLessThan(lastMidnight).findFirst();

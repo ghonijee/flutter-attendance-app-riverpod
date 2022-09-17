@@ -28,7 +28,7 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   /// Initial state, check Attendacne by Current Data
   init() async {
     await sourceLocal.init();
-    DateTime value = DateTime.now();
+    DateTime? value = DateTime.now();
     state = UserAttendanceState.loading();
     var data = await sourceLocal.whereDate(value) ?? AttendanceModel();
 
@@ -39,7 +39,6 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   changeDate(DateTime value) async {
     state = UserAttendanceState.loading();
     var data = await sourceLocal.whereDate(value) ?? AttendanceModel();
-    print(data.toJson());
     state = UserAttendanceState.loaded(data);
   }
 
