@@ -1,1 +1,1 @@
-{}
+{"MasterLocation":"{\"lat\":52.56127,\"long\":5.639382,\"name\":\"test-address\"}"}

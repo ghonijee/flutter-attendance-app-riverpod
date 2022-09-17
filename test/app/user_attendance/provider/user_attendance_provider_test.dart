@@ -91,11 +91,12 @@ void main() {
       ),
     ]);
 
-    var state = container.read(userAttendanceProvider);
-    expect(state, UserAttendanceState.inital());
-    await Future.delayed(const Duration(seconds: 5));
-    await container.read(userAttendanceProvider.notifier).init();
-    var loaded = container.read(userAttendanceProvider);
+    var listen = container.listen(userAttendanceProvider, (previous, next) => next);
+    expect(listen.read(), UserAttendanceState.inital());
+    var loaded;
+    await Future.delayed(const Duration(seconds: 3), () {
+      loaded = listen.read();
+    });
     loaded as AttendanceLoaded;
     expect(loaded.model.checkInLat, isNull);
     expect(loaded.model.checkInLong, isNull);
@@ -116,10 +117,12 @@ void main() {
       ),
     ]);
 
-    var state = container.read(userAttendanceProvider);
-    expect(state, UserAttendanceState.inital());
-    await container.read(userAttendanceProvider.notifier).init();
-    var loaded = container.read(userAttendanceProvider);
+    var listen = container.listen(userAttendanceProvider, (previous, next) => next);
+    expect(listen.read(), UserAttendanceState.inital());
+    var loaded;
+    await Future.delayed(const Duration(seconds: 3), () {
+      loaded = listen.read();
+    });
     loaded as AttendanceLoaded;
     expect(loaded.model.checkInAt, isA<DateTime?>());
     expect(loaded.model.checkOutAt, isA<DateTime?>());
