@@ -72,21 +72,21 @@ class AttendanceScreen extends HookConsumerWidget {
                 color: Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     SizedBox(
                       height: 12,
                     ),
-                    const Text(
+                    Text(
                       "Hi, Selamat Datang",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 8,
                     ),
-                    const Text(
+                    Text(
                       "Silakan check in kehadiranmu hari ini!",
                       style: TextStyle(
                         fontSize: 16,
@@ -273,7 +273,7 @@ class AttendanceScreen extends HookConsumerWidget {
                         child: (model.checkInStatus == false)
                             ? Text('Check In')
                             : (model.checkOutStatus == false)
-                                ? Text('Check In')
+                                ? Text('Check Out')
                                 : Text("Selesai"),
                       ),
                       loading: () => ElevatedButton(

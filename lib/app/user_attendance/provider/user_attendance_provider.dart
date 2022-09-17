@@ -72,9 +72,9 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
       );
 
       await sourceLocal.create(model);
-      var data = await sourceLocal.whereDate(checkInAt) ?? AttendanceModel();
+      // var data = await sourceLocal.whereDate(checkInAt) ?? AttendanceModel();
 
-      state = UserAttendanceState.loaded(data);
+      state = UserAttendanceState.loaded(model);
     } catch (e) {
       state = UserAttendanceState.failed(e.toString());
       state = UserAttendanceState.loaded(AttendanceModel());
