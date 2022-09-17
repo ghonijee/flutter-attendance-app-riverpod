@@ -20,22 +20,22 @@ Setting Master Location | User check in failed | User check in success
 
 ## Tech Stack
 
-* Manage flutter version 3.3.1 using [FVM]()
-* State Management Using [Riverpod]()
-* Maps view using [Flutter_map]()
-* Union-Type and model builder using [Freezed]()
-* Local database using [Isar DB]()
-* Local storage key-value using [GetStorage]()
-* Calendar view using Table [Calendar]()
-* Device location using [Geolocator]()
-* Convert position to address using [Geocoding]()
+* Manage flutter version 3.3.1 using [FVM](https://fvm.app)
+* State Management Using [Riverpod](https://riverpod.dev)
+* Maps view using [Flutter_map](https://docs.fleaflet.dev)
+* Union-Type and model builder using [Freezed](https://pub.dev/packages/freezed)
+* Local database using [Isar DB](https://isar.dev)
+* Local storage key-value using [GetStorage](https://pub.dev/packages/get_storage)
+* Calendar view using Table [Calendar](https://pub.dev/packages/table_calendar)
+* Device location using [Geolocator](https://pub.dev/packages/geolocator)
+* Convert position to address using [Geocoding](https://pub.dev/packages/geocoding)
 
 <br/>
 
 ## How Run
 1. Clone project from repository
     ```bash
-    git clone .... 
+    git clone git@github.com:ghonijee/flutter-attendance-app-riverpod.git
     ```
 2. Install dependencies
     ```bash
@@ -53,9 +53,7 @@ Setting Master Location | User check in failed | User check in success
 
 ## Author
 
->
-> <b>Ghoni Jee</b> </br>
-> connect with me on: <br>
-> [Twitter]() <br>
-> [LinkedIn]() <br>
->
+This app develop by [Ahmad Yunus Afghoni](github.com/ghonijee)
+
+[Twitter](https://twitter.com/ghonijee)
+[LinkedIn](https://www.linkedin.com/in/yunus-afghoni/)
