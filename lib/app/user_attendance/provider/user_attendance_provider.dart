@@ -54,6 +54,7 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
       var defaultState = state;
       state = UserAttendanceState.loading();
       DateTime checkInAt = DateTime.now();
+
       var masterLocationModel = getMasterLocation();
 
       Position currentPosition = await locationNotifier.getContinuousLocation();
@@ -86,10 +87,12 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   /// Store data to check In
   checkOut() async {
     try {
+      var defaultState = state;
       state = UserAttendanceState.loading();
       DateTime checkOutAt = DateTime.now();
-      var masterLocationModel = getMasterLocation();
       var data = await sourceLocal.whereDate(checkOutAt) ?? AttendanceModel();
+
+      var masterLocationModel = getMasterLocation();
 
       Position currentPosition = await locationNotifier.getContinuousLocation();
       String locationAt = await getMarkLocation(currentPosition);
@@ -97,6 +100,8 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
       var distanceInMeters = Geolocator.distanceBetween(currentPosition.latitude, currentPosition.longitude, masterLocationModel.lat!, masterLocationModel.long!);
       if (distanceInMeters > 50) {
         state = UserAttendanceState.failed("Lokasi anda masih diluar area, silakan datang ke ${masterLocationModel.name}");
+        state = defaultState;
+
         return;
       }
       data as AttendanceModel;
@@ -117,7 +122,10 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   }
 
   MasterLocationModel getMasterLocation() {
-    String masterPositionJson = storage.read(LocalStorageKey.masterLocation);
+    String? masterPositionJson = storage.read(LocalStorageKey.masterLocation);
+    if (masterPositionJson == null) {
+      throw "Master location belum ditentukan!";
+    }
     MasterLocationModel masterLocationModel = MasterLocationModel.fromJson(masterPositionJson);
     return masterLocationModel;
   }
