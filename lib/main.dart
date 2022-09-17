@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import 'app/master_location/screens/setting_master_location_screen.dart';
 import 'app/user_attendance/screens/attendance_screen.dart';
 
 void main() async {
