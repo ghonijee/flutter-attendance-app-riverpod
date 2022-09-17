@@ -1,12 +1,9 @@
 import 'package:attendance_app/app/master_location/providers/master_location_provider.dart';
 import 'package:attendance_app/app/master_location/state/master_location_state.dart';
-import 'package:attendance_app/shared/providers/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 class SettingMasterlocationScreen extends HookConsumerWidget {
   const SettingMasterlocationScreen({Key? key}) : super(key: key);
@@ -31,17 +28,14 @@ class SettingMasterlocationScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Master Location")),
-      body: state.maybeWhen(inital: () {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }, loading: () {
-        return Container(
+      body: state.maybeWhen(loading: () {
+        print("loading..");
+        return SizedBox(
             height: screen.height,
             width: screen.width,
             child: Stack(
               children: [
-                Container(
+                SizedBox(
                   height: screen.height,
                   width: screen.width,
                   child: FlutterMap(
@@ -81,7 +75,7 @@ class SettingMasterlocationScreen extends HookConsumerWidget {
                         const SizedBox(
                           height: 16,
                         ),
-                        Text("Loading..."),
+                        const Text("Loading..."),
                         const SizedBox(
                           height: 16,
                         ),
@@ -105,12 +99,12 @@ class SettingMasterlocationScreen extends HookConsumerWidget {
             ));
       }, loaded: (model) {
         mapController.value.move(model.position, 15);
-        return Container(
+        return SizedBox(
             height: screen.height,
             width: screen.width,
             child: Stack(
               children: [
-                Container(
+                SizedBox(
                   height: screen.height,
                   width: screen.width,
                   child: FlutterMap(
@@ -147,11 +141,9 @@ class SettingMasterlocationScreen extends HookConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: FloatingActionButton(
-                            child: Icon(Icons.gps_fixed),
+                            child: const Icon(Icons.gps_fixed),
                             onPressed: () {
                               ref.watch(masterLocationProvider.notifier).init();
-
-                              print("init");
                             }),
                       ),
                       Container(
@@ -194,7 +186,9 @@ class SettingMasterlocationScreen extends HookConsumerWidget {
               ],
             ));
       }, orElse: () {
-        return Text("else not");
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       }),
     );
   }
