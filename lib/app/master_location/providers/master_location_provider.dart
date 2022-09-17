@@ -46,7 +46,7 @@ class MasterLocationNotifier extends StateNotifier<MasterLocationState> {
     state = MasterLocationState.loaded(model);
   }
 
-  /// Save master location to localStorage
+  /// Save current master location to localStorage
   saveLocation() {
     final storage = reader(localStorageProvider);
     var currentState = state as MasterLocationLoaded;

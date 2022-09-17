@@ -30,14 +30,28 @@
 
 ## How Run
 1. Clone project from repository
-    ```git
+    ```bash
     git clone .... 
     ```
 2. Install dependencies
-    ```git
+    ```bash
     flutter pub get 
     ```
 3. Running test
-    ```git
+    ```bash
     flutter test
     ```
+4. Running on emulator
+    ```bash
+    flutter run
+    ```
+</br>
+
+## Author
+
+>
+> <b>Ghoni Jee</b> </br>
+> connect with me on: <br>
+> [Twitter]() <br>
+> [LinkedIn]() <br>
+>
