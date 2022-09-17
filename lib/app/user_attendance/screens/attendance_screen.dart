@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:attendance_app/app/master_location/screens/setting_master_location_screen.dart';
+import 'package:attendance_app/app/user_attendance/models/attendance_model.dart';
 import 'package:attendance_app/app/user_attendance/state/user_attendance_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -102,7 +103,7 @@ class AttendanceScreen extends HookConsumerWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 color: Colors.white,
-                child: TableCalendar(
+                child: TableCalendar<AttendanceModel>(
                   headerStyle: const HeaderStyle(
                     titleCentered: true,
                     formatButtonVisible: false,
@@ -114,13 +115,13 @@ class AttendanceScreen extends HookConsumerWidget {
                   startingDayOfWeek: StartingDayOfWeek.monday,
                   onDaySelected: (selectedDay, focusedDay) async {
                     focusDay.value = selectedDay;
-
                     await notifier.changeDate(focusDay.value);
                   },
                   selectedDayPredicate: (day) => isSameDay(day, focusDay.value),
                   enabledDayPredicate: (day) {
                     return day.day <= DateTime.now().day;
                   },
+                  eventLoader: (day) {},
                   calendarBuilders: CalendarBuilders(
                     dowBuilder: (context, day) {
                       if (day.weekday == DateTime.saturday || day.weekday == DateTime.sunday) {
@@ -133,16 +134,7 @@ class AttendanceScreen extends HookConsumerWidget {
                         );
                       }
                     },
-                    defaultBuilder: (context, day, focusedDay) {
-                      if (true) {
-                        return Center(
-                          child: Text(
-                            day.day.toString(),
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        );
-                      }
-                    },
+
                     // defaultBuilder: (context, day, focusedDay) {},
                   ),
                 ),

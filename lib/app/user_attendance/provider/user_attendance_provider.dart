@@ -51,6 +51,7 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   /// Store data to check In
   checkIn() async {
     try {
+      var defaultState = state;
       state = UserAttendanceState.loading();
       DateTime checkInAt = DateTime.now();
       var masterLocationModel = getMasterLocation();
@@ -60,7 +61,8 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
 
       var distanceInMeters = Geolocator.distanceBetween(currentPosition.latitude, currentPosition.longitude, masterLocationModel.lat!, masterLocationModel.long!);
       if (distanceInMeters > 50) {
-        state = UserAttendanceState.failed("Lokasi anda masih diluar area, silakan datang ke ${masterLocationModel.name}");
+        state = UserAttendanceState.failed("Lokasi anda masih diluar area ${masterLocationModel.name}");
+        state = defaultState;
         return;
       }
 

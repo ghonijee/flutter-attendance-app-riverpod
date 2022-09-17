@@ -7,7 +7,7 @@ import 'app/user_attendance/screens/attendance_screen.dart';
 
 void main() async {
   await GetStorage.init();
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AttendanceScreen(),
+      home: const AttendanceScreen(),
     );
   }
 }
