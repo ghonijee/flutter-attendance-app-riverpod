@@ -51,7 +51,6 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   /// Store data to check In
   checkIn() async {
     try {
-      var defaultState = state;
       state = UserAttendanceState.loading();
       DateTime checkInAt = DateTime.now();
 
@@ -62,9 +61,7 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
 
       var distanceInMeters = Geolocator.distanceBetween(currentPosition.latitude, currentPosition.longitude, masterLocationModel.lat!, masterLocationModel.long!);
       if (distanceInMeters > 50) {
-        state = UserAttendanceState.failed("Lokasi anda masih diluar area ${masterLocationModel.name}");
-        state = defaultState;
-        return;
+        throw "Lokasi anda masih diluar area ${masterLocationModel.name}";
       }
 
       var model = AttendanceModel(
@@ -87,7 +84,6 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
   /// Store data to check In
   checkOut() async {
     try {
-      var defaultState = state;
       state = UserAttendanceState.loading();
       DateTime checkOutAt = DateTime.now();
       var data = await sourceLocal.whereDate(checkOutAt) ?? AttendanceModel();
@@ -97,12 +93,15 @@ class UserAttendanceNotifier extends StateNotifier<UserAttendanceState> {
       Position currentPosition = await locationNotifier.getContinuousLocation();
       String locationAt = await getMarkLocation(currentPosition);
 
-      var distanceInMeters = Geolocator.distanceBetween(currentPosition.latitude, currentPosition.longitude, masterLocationModel.lat!, masterLocationModel.long!);
-      if (distanceInMeters > 50) {
-        state = UserAttendanceState.failed("Lokasi anda masih diluar area, silakan datang ke ${masterLocationModel.name}");
-        state = defaultState;
+      var distanceInMeters = Geolocator.distanceBetween(
+        currentPosition.latitude,
+        currentPosition.longitude,
+        masterLocationModel.lat!,
+        masterLocationModel.long!,
+      );
 
-        return;
+      if (distanceInMeters > 50) {
+        throw "Lokasi anda masih diluar area, silakan datang ke ${masterLocationModel.name}";
       }
       data as AttendanceModel;
       var model = data.copyWith(

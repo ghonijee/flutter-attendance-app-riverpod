@@ -189,8 +189,8 @@ void main() {
     ]);
     var state = container.listen(userAttendanceProvider, (previous, next) => next);
     await container.read(userAttendanceProvider.notifier).checkIn();
-    expect(state.read(), isA<AttendanceFailed>());
-    state is AttendanceFailed;
+    await container.pump();
+    expect(state.read(), isA<AttendanceLoaded>());
   });
   test("Check in success when distance position from master location < 50 meters", () async {
     when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => mockPosition);
@@ -224,8 +224,8 @@ void main() {
     ]);
     var state = container.listen(userAttendanceProvider, (previous, next) => next);
     await container.read(userAttendanceProvider.notifier).checkOut();
-    expect(state.read(), isA<AttendanceFailed>());
-    state is AttendanceFailed;
+    expect(state.read(), isA<AttendanceLoaded>());
+    state is AttendanceLoaded;
   });
   test("Check out success when distance position from master location < 50 meters", () async {
     when(locationNotifier.getContinuousLocation()).thenAnswer((_) async => mockPosition);
