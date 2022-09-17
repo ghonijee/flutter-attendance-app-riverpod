@@ -121,7 +121,6 @@ class AttendanceScreen extends HookConsumerWidget {
                   enabledDayPredicate: (day) {
                     return day.day <= DateTime.now().day;
                   },
-                  eventLoader: (day) {},
                   calendarBuilders: CalendarBuilders(
                     dowBuilder: (context, day) {
                       if (day.weekday == DateTime.saturday || day.weekday == DateTime.sunday) {
